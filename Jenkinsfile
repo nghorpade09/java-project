@@ -20,7 +20,7 @@ pipeline {
     stages {
         stage('Build'){
             steps {
-                sh "mvn -s settings.xml -DskipTests install -DrepositoryId=${env.NEXUS_LOGIN} -Durl=http://${env.NEXUSIP}:${env.NEXUSPORT}/repository/${env.CENTRAL_REPO}"
+                sh 'mvn -s settings.xml -DskipTests install'
             }
         }
     }
