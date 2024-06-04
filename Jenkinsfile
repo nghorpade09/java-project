@@ -25,6 +25,15 @@ pipeline {
     }
 
     stages {
+        // Add the Slack Test stage
+        stage('Slack Test') {
+            steps {
+                script {
+                    slackSend(channel: '#javaproject-cicd', message: 'Slack integration test.')
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 sh 'mvn -s settings.xml -DskipTests install'
@@ -70,8 +79,6 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
-                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
-                    // true = set pipeline to UNSTABLE, false = don't
                     waitForQualityGate abortPipeline: true
                 }
             }
@@ -96,14 +103,17 @@ pipeline {
                 )
             }
         }
-    } // Close the stages block
+    }
 
     post {
         always {
-            echo 'Slack Notifications.'
-            slackSend channel: '#javaproject-cicd',
-                color: COLOR_MAP[currentBuild.currentResult],
-                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+            script {
+                echo "Sending Slack notification."
+                echo "Build result: ${currentBuild.currentResult}"
+                slackSend(channel: '#javaproject-cicd', 
+                          color: COLOR_MAP[currentBuild.currentResult] ?: 'warning', 
+                          message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}")
+            }
         }
     }
-} 
+}
