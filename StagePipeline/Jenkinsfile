@@ -25,6 +25,8 @@ pipeline {
         registryCredential = 'ecr:us-east-1:awscreds'
         appRegistry = '891377194600.dkr.ecr.us-east-1.amazonaws.com/java-project'
         vprofileRegistry = "https://891377194600.dkr.ecr.us-east-1.amazonaws.com"
+        cluster = "javaproject-stagging-new"
+        service = "vproappstagesvc"
     }
 
     stages {
@@ -106,13 +108,13 @@ pipeline {
             }
         }
 
-          stage('Build App Image') {
+        stage('Build App Image') {
             steps {
                 script {
                     dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
                 }
             }
-        }// <--- Added closing curly brace here
+        }
 
         stage('Upload App Image') {
             steps {
@@ -122,6 +124,14 @@ pipeline {
                         dockerImage.push('latest')
                     }
                 }
+            }
+        }
+
+        stage('Deploy to ECS staging') {
+            steps {
+                withAWS(credentials: 'awscreds', region: 'us-east-1') {
+                    sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
+                } 
             }
         }
     }
