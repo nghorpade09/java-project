@@ -29,7 +29,7 @@ pipeline {
         stage('Slack Test') {
             steps {
                 script {
-                    slackSend(channel: '#javaproject-cicd', message: 'Slack integration test.')
+                    slackSend(channel: '#javaprojectslack', message: 'Slack integration test.')
                 }
             }
         }
@@ -110,7 +110,7 @@ pipeline {
             script {
                 echo "Sending Slack notification."
                 echo "Build result: ${currentBuild.currentResult}"
-                slackSend(channel: '#javaproject-cicd', 
+                slackSend(channel: '#javaprojectslack', 
                           color: COLOR_MAP[currentBuild.currentResult] ?: 'warning', 
                           message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}")
             }
