@@ -30,13 +30,6 @@ pipeline {
     }
 
     stages {
-        stage('Slack Test') {
-            steps {
-                script {
-                    slackSend(channel: '#javaprojectslack', message: 'Slack integration test.')
-                }
-            }
-        }
 
         stage('Build') {
             steps {
