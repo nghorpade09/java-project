@@ -106,13 +106,13 @@ pipeline {
             }
         }
 
-        stage('Build App Image') {
+          stage('Build App Image') {
             steps {
                 script {
-                    dockerImage = docker.build(appRegistry+":$BUILD_NUMBER", ".Docker-files/app/multistage/")
+                    dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
                 }
             }
-        } // <--- Added closing curly brace here
+        }// <--- Added closing curly brace here
 
         stage('Upload App Image') {
             steps {
