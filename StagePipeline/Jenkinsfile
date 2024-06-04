@@ -136,15 +136,15 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            script {
-                echo "Sending Slack notification."
-                echo "Build result: ${currentBuild.currentResult}"
-                slackSend(channel: '#javaprojectslack', 
-                          color: COLOR_MAP[currentBuild.currentResult] ?: 'warning', 
-                          message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}")
-            }
-        }
-    }
+    // post {
+    //     always {
+    //         script {
+    //             echo "Sending Slack notification."
+    //             echo "Build result: ${currentBuild.currentResult}"
+    //             slackSend(channel: '#javaprojectslack', 
+    //                       color: COLOR_MAP[currentBuild.currentResult] ?: 'warning', 
+    //                       message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}")
+    //         }
+    //     }
+    // }
 }
